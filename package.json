@@ -1,0 +1,16 @@
+{
+  "name": "tokenowl",
+  "private": true,
+  "description": "Local Claude Code observability tool — surfaces where your spend goes and proposes evidence-backed changes to reduce cost.",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "npm run --prefix web dev",
+    "build": "npm run --prefix web build",
+    "lint": "npm run --prefix web lint",
+    "format": "npm run --prefix web format",
+    "typecheck": "npm run --prefix web typecheck",
+    "check": "npm run --prefix web check"
+  }
+}

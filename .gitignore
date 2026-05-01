@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist2/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+*.code-workspace
+
+# Logs
+*.log
+npm-debug.log*
+
+# Design reference (local only, not source code)
+docs/stitch-reference/
+
+# Leftover from pnpm (delete manually)
+pnpm-workspace.yaml
+
+# Misc
+*.tsbuildinfo
