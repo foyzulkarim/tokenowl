@@ -30,3 +30,7 @@ pnpm-workspace.yaml
 
 # Misc
 *.tsbuildinfo
+
+# Playwright MCP artifacts
+.playwright-mcp/
+*.png
