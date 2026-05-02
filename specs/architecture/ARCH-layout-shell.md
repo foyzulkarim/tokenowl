@@ -429,7 +429,7 @@ Create the Zustand UI store that owns `sidebarCollapsed` state, persisted to `lo
 
 ## Task T4: Layout components — Sidebar, Header, root wiring
 
-> **Status:** not started
+> **Status:** done
 > **Effort:** m
 > **Priority:** high
 > **Depends on:** T2, T3
