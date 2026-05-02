@@ -275,7 +275,7 @@ Install and configure the test harness — vitest, React Testing Library, user-e
 
 ## Task T2: Router foundation — packages, config, stub routes, redirect
 
-> **Status:** not started
+> **Status:** done
 > **Effort:** m
 > **Priority:** critical
 > **Depends on:** T1
