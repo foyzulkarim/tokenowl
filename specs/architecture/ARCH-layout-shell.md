@@ -366,7 +366,7 @@ Install the four production packages, wire TanStack Router into the app, create 
 
 ## Task T3: UI store — sidebar collapse with localStorage persistence
 
-> **Status:** not started
+> **Status:** done
 > **Effort:** s
 > **Priority:** high
 > **Depends on:** T1
