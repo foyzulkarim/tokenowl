@@ -3,9 +3,37 @@ import { useUIStore } from "@/store/ui";
 import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/react-router";
 import { render, screen } from "@testing-library/react";
 
+const lsData: Record<string, string> = {};
+const localStorageMock: Storage = {
+  getItem: (key: string) => lsData[key] ?? null,
+  setItem: (key: string, value: string) => {
+    lsData[key] = value;
+  },
+  removeItem: (key: string) => {
+    delete lsData[key];
+  },
+  clear: () => {
+    for (const k of Object.keys(lsData)) {
+      delete lsData[k];
+    }
+  },
+  key: (i: number) => Object.keys(lsData)[i] ?? null,
+  get length() {
+    return Object.keys(lsData).length;
+  },
+};
+
+beforeAll(() => {
+  vi.stubGlobal("localStorage", localStorageMock);
+});
+
 beforeEach(() => {
   localStorage.clear();
   useUIStore.setState({ sidebarCollapsed: false });
+});
+
+afterAll(() => {
+  vi.unstubAllGlobals();
 });
 
 async function renderAt(path: string) {
