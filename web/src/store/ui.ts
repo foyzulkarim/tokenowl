@@ -16,11 +16,10 @@ export const useUIStore = create<UIState>()(
       name: "tokenowl_ui",
       version: 1,
       partialize: (s) => ({ sidebarCollapsed: s.sidebarCollapsed }),
-      // Lazy wrapper so tests can stub window.localStorage after module load
       storage: createJSONStorage(() => ({
-        getItem: (name) => window.localStorage.getItem(name),
-        setItem: (name, value) => window.localStorage.setItem(name, value),
-        removeItem: (name) => window.localStorage.removeItem(name),
+        getItem: (...args) => localStorage.getItem(...args),
+        setItem: (...args) => localStorage.setItem(...args),
+        removeItem: (...args) => localStorage.removeItem(...args),
       })),
     },
   ),

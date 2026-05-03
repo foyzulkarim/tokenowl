@@ -1,3 +1,4 @@
+import { useUIStore } from "@/store/ui";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   BarChart2,
@@ -11,7 +12,7 @@ import {
   Settings,
   TrendingUp,
 } from "lucide-react";
-import { useUIStore } from "@/store/ui";
+import type { LucideIcon } from "lucide-react";
 
 const MAIN_NAV = [
   { label: "Dashboard", route: "/dashboard", Icon: LayoutDashboard },
@@ -23,11 +24,7 @@ const MAIN_NAV = [
   { label: "Runs", route: "/runs", Icon: Play },
 ] as const;
 
-const BOTTOM_NAV = [
-  { label: "Settings", route: "/settings", Icon: Settings },
-] as const;
-
-const NAV_ITEMS = [...MAIN_NAV, ...BOTTOM_NAV] as const;
+const BOTTOM_NAV = [{ label: "Settings", route: "/settings", Icon: Settings }] as const;
 
 function NavLink({
   label,
@@ -38,17 +35,18 @@ function NavLink({
 }: {
   label: string;
   route: string;
-  Icon: React.ElementType;
+  Icon: LucideIcon;
   isActive: boolean;
   collapsed: boolean;
 }) {
   return (
     <Link
       to={route}
+      aria-label={label}
       className={
         isActive
-          ? "flex items-center gap-3 px-3 py-2 border-l-2 border-primary-container bg-surface-container-high text-on-surface font-medium"
-          : "flex items-center gap-3 px-3 py-2 border-l-2 border-transparent text-on-surface-variant hover:bg-surface-container hover:text-on-surface"
+          ? "flex items-center gap-3 px-3 py-2 border-l-2 border-primary-container bg-surface-container-high text-on-surface font-medium focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+          : "flex items-center gap-3 px-3 py-2 border-l-2 border-transparent text-on-surface-variant hover:bg-surface-container hover:text-on-surface focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
       }
     >
       <Icon size={16} aria-hidden />
@@ -58,19 +56,22 @@ function NavLink({
 }
 
 export function Sidebar() {
-  const { location: { pathname } } = useRouterState();
-  const { sidebarCollapsed, toggleSidebar } = useUIStore();
+  const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed);
+  const toggleSidebar = useUIStore((s) => s.toggleSidebar);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <aside className={`flex flex-col shrink-0 ${sidebarCollapsed ? "w-10" : "w-[240px]"} bg-surface-container-low border-r border-outline-variant`}>
-      <nav className="flex flex-col flex-1 py-2">
+    <aside
+      className={`flex flex-col shrink-0 transition-[width] duration-200 ${sidebarCollapsed ? "w-10" : "w-[240px]"} bg-surface-container-low border-r border-outline-variant`}
+    >
+      <nav aria-label="Main" className="flex flex-col flex-1 py-2">
         {MAIN_NAV.map(({ label, route, Icon }) => (
           <NavLink
             key={route}
             label={label}
             route={route}
             Icon={Icon}
-            isActive={pathname.startsWith(route)}
+            isActive={pathname === route || pathname.startsWith(`${route}/`)}
             collapsed={sidebarCollapsed}
           />
         ))}
@@ -82,17 +83,22 @@ export function Sidebar() {
             label={label}
             route={route}
             Icon={Icon}
-            isActive={pathname.startsWith(route)}
+            isActive={pathname === route || pathname.startsWith(`${route}/`)}
             collapsed={sidebarCollapsed}
           />
         ))}
         <button
           type="button"
           aria-label="Toggle sidebar"
+          aria-expanded={!sidebarCollapsed}
           onClick={toggleSidebar}
-          className="w-full flex items-center justify-center p-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface"
+          className="w-full flex items-center justify-center p-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
         >
-          {sidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          {sidebarCollapsed ? (
+            <ChevronRight size={16} aria-hidden />
+          ) : (
+            <ChevronLeft size={16} aria-hidden />
+          )}
         </button>
       </div>
     </aside>

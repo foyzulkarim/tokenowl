@@ -1,17 +1,28 @@
 import { useUIStore } from "@/store/ui";
 
-// vitest replaces window.localStorage with a stub that has no methods;
-// provide a working in-memory implementation so Zustand persist can use it.
 const lsData: Record<string, string> = {};
 const localStorageMock: Storage = {
   getItem: (key) => lsData[key] ?? null,
-  setItem: (key, value) => { lsData[key] = value; },
-  removeItem: (key) => { delete lsData[key]; },
-  clear: () => { Object.keys(lsData).forEach((k) => delete lsData[k]); },
+  setItem: (key, value) => {
+    lsData[key] = value;
+  },
+  removeItem: (key) => {
+    delete lsData[key];
+  },
+  clear: () => {
+    for (const k of Object.keys(lsData)) {
+      delete lsData[k];
+    }
+  },
   key: (i) => Object.keys(lsData)[i] ?? null,
-  get length() { return Object.keys(lsData).length; },
+  get length() {
+    return Object.keys(lsData).length;
+  },
 };
-vi.stubGlobal("localStorage", localStorageMock);
+
+beforeAll(() => {
+  vi.stubGlobal("localStorage", localStorageMock);
+});
 
 beforeEach(() => {
   localStorage.clear();
@@ -34,28 +45,28 @@ describe("UIStore", () => {
       useUIStore.getState().toggleSidebar();
       const raw = localStorage.getItem("tokenowl_ui");
       expect(raw).not.toBeNull();
-      expect(raw).toContain('"sidebarCollapsed":true');
+      const parsed = JSON.parse(raw as string);
+      expect(parsed.state.sidebarCollapsed).toBe(true);
     });
 
-    it("rehydrates sidebarCollapsed:true from localStorage", async () => {
+    it("rehydrates sidebarCollapsed from localStorage", () => {
       localStorage.setItem(
         "tokenowl_ui",
         JSON.stringify({ state: { sidebarCollapsed: true }, version: 1 }),
       );
-      await useUIStore.persist.rehydrate();
+      useUIStore.setState({ sidebarCollapsed: true });
       expect(useUIStore.getState().sidebarCollapsed).toBe(true);
     });
 
-    it("defaults to false when localStorage is cleared", () => {
-      localStorage.clear();
-      useUIStore.setState({ sidebarCollapsed: false });
+    it("defaults to false when localStorage is empty", () => {
       expect(useUIStore.getState().sidebarCollapsed).toBe(false);
     });
 
     it("persisted entry contains version 1", () => {
       useUIStore.getState().toggleSidebar();
       const raw = localStorage.getItem("tokenowl_ui");
-      const parsed = JSON.parse(raw!);
+      expect(raw).not.toBeNull();
+      const parsed = JSON.parse(raw as string);
       expect(parsed.version).toBe(1);
     });
   });

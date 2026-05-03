@@ -1,6 +1,12 @@
-import { createMemoryHistory, createRouter, RouterProvider } from "@tanstack/react-router";
-import { render, screen } from "@testing-library/react";
 import { routeTree } from "@/routeTree.gen";
+import { useUIStore } from "@/store/ui";
+import { RouterProvider, createMemoryHistory, createRouter } from "@tanstack/react-router";
+import { render, screen } from "@testing-library/react";
+
+beforeEach(() => {
+  localStorage.clear();
+  useUIStore.setState({ sidebarCollapsed: false });
+});
 
 async function renderAt(path: string) {
   const history = createMemoryHistory({ initialEntries: [path] });
