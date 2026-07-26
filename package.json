@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Calculate LLM token usage costs from per-million-token pricing.",
   "type": "module",
-  "private": true,
   "exports": "./src/index.js",
   "types": "./src/index.d.ts",
   "files": [
@@ -11,8 +10,7 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "test": "node --test",
-    "prepublishOnly": "node -e \"console.error('Publishing disabled until explicitly requested.'); process.exit(1)\""
+    "test": "node --test"
   },
   "keywords": [
     "llm",
